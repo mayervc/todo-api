@@ -8,7 +8,9 @@
     "start": "node dist/index.js",
     "sequelize": "sequelize-cli",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "sequelize db:migrate"
+    "migrate": "sequelize db:migrate",
+    "lint": "eslint . --ext .ts,.js",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
