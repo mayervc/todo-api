@@ -8,13 +8,7 @@ dotenv.config()
 
 const basename = path.basename(__filename)
 const env = process.env.NODE_ENV || 'development'
-const pathToConfig = path.resolve(
-  __dirname,
-  '..',
-  '..',
-  'config',
-  'config.json'
-)
+const pathToConfig = path.resolve(__dirname, '..', 'config', 'config.json')
 const config = require(pathToConfig)[env]
 const db: { [key: string]: any } = {}
 
