@@ -23,9 +23,6 @@ COPY . .
 # Compila el proyecto TypeScript
 RUN npm run build
 
-# Copia la carpeta de configuración
-RUN cp -r src/config dist/
-
 # Cambiar propiedad de la app al usuario no-root
 RUN chown -R appuser:appuser $INSTALL_PATH
 
