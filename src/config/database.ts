@@ -10,7 +10,7 @@ const config = {
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_DATABASE || 'todo_db',
-    host: process.env.DB_HOST || 'host.docker.internal',
+    host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '5432'),
     dialect: 'postgres' as const,
     logging: console.log
