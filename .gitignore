@@ -1,6 +1,8 @@
+dist/
 node_modules
 # IDEs
 .idea/
 .vscode/
 # local env files
 .env*.local
+.env

@@ -1,6 +1,6 @@
 import request from 'supertest'
 import app from '../index'
-import db from '../../models'
+import db from '../models'
 
 describe('GET /api/health-check', () => {
   it('should return api and database status', async () => {
