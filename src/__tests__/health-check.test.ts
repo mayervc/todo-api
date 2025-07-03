@@ -1,6 +1,6 @@
 import request from 'supertest'
 import app from '../index'
-import db from '../models'
+import { sequelize } from '../config/database'
 
 describe('GET /api/health-check', () => {
   it('should return api and database status', async () => {
@@ -11,7 +11,6 @@ describe('GET /api/health-check', () => {
   })
 })
 
-// Cierra la conexión de Sequelize después de todos los tests
 afterAll(async () => {
-  await db.sequelize.close()
+  await sequelize.close()
 })
