@@ -114,12 +114,28 @@ todo-api/
 └── tsconfig.json    # Configuración de TypeScript
 ```
 
-## 🔧 Scripts Disponibles
+## 🛠️ Scripts Disponibles
 
 - `npm run dev` - Ejecuta el servidor en modo desarrollo
 - `npm run build` - Compila el proyecto TypeScript
 - `npm start` - Ejecuta el servidor en modo producción
 - `npm run sequelize` - Ejecuta comandos de Sequelize CLI
+- `npm run db:create` - Crea la base de datos usando un script TypeScript personalizado
+- `npm run db:drop` - Elimina la base de datos usando un script TypeScript personalizado
+
+## 🐳 Manejo de la base de datos con Docker Compose
+
+Puedes crear y eliminar la base de datos directamente desde Docker Compose usando los scripts personalizados:
+
+```bash
+# Eliminar la base de datos
+docker compose run --rm todo-api npm run db:drop
+
+# Crear la base de datos
+docker compose run --rm todo-api npm run db:create
+```
+
+Esto ejecutará los scripts TypeScript ubicados en `src/scripts/db-create.ts` y `src/scripts/db-drop.ts` dentro del contenedor, usando las variables de entorno configuradas.
 
 ## 🐳 Docker
 
