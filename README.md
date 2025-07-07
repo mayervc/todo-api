@@ -122,10 +122,12 @@ todo-api/
 - `npm run sequelize` - Ejecuta comandos de Sequelize CLI
 - `npm run db:create` - Crea la base de datos usando un script TypeScript personalizado
 - `npm run db:drop` - Elimina la base de datos usando un script TypeScript personalizado
+- `npm run migrate` - Ejecuta todas las migraciones pendientes usando Sequelize CLI
+- `npm run rollback` - Revierte la última migración usando Sequelize CLI
 
 ## 🐳 Manejo de la base de datos con Docker Compose
 
-Puedes crear y eliminar la base de datos directamente desde Docker Compose usando los scripts personalizados:
+Puedes crear, eliminar y migrar la base de datos directamente desde Docker Compose usando los scripts:
 
 ```bash
 # Eliminar la base de datos
@@ -133,9 +135,15 @@ docker compose run --rm todo-api npm run db:drop
 
 # Crear la base de datos
 docker compose run --rm todo-api npm run db:create
+
+# Ejecutar migraciones
+docker compose run --rm todo-api npm run migrate
+
+# Revertir la última migración
+docker compose run --rm todo-api npm run rollback
 ```
 
-Esto ejecutará los scripts TypeScript ubicados en `src/scripts/db-create.ts` y `src/scripts/db-drop.ts` dentro del contenedor, usando las variables de entorno configuradas.
+Esto ejecutará los scripts usando Sequelize CLI y los scripts personalizados de creación/eliminación de base de datos dentro del contenedor, usando las variables de entorno configuradas.
 
 ## 🐳 Docker
 

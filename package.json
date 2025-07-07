@@ -10,6 +10,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "migrate": "sequelize db:migrate",
+    "rollback": "sequelize db:migrate:undo",
     "db:create": "ts-node src/scripts/db-create.ts",
     "db:drop": "ts-node src/scripts/db-drop.ts",
     "lint": "eslint . --ext .ts,.js",
