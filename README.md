@@ -133,9 +133,6 @@ docker compose run --rm todo-api npm run db:drop
 
 # Crear la base de datos
 docker compose run --rm todo-api npm run db:create
-
-# Ejecutar migraciones
-docker compose run --rm todo-api npm run migrate
 ```
 
 Esto ejecutará los scripts TypeScript ubicados en `src/scripts/db-create.ts` y `src/scripts/db-drop.ts` dentro del contenedor, usando las variables de entorno configuradas.
