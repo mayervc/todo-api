@@ -140,7 +140,7 @@ docker compose run --rm todo-api npm run db:create
 docker compose run --rm todo-api npm run db:migrate
 
 # Revertir la última migración
-docker compose run --rm todo-api npm run rollback
+docker compose run --rm todo-api npm run db:rollback
 ```
 
 Esto ejecutará los scripts usando Sequelize CLI y los scripts personalizados de creación/eliminación de base de datos dentro del contenedor, usando las variables de entorno configuradas.
