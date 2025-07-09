@@ -11,6 +11,18 @@ services:
     volumes:
       - todo-postgres:/var/lib/postgresql/data
 
+  postgres-test:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: todo_user
+      POSTGRES_PASSWORD: todo_password
+      POSTGRES_DB: todo_test
+    ports:
+      - '5434:5432'
+    volumes:
+      - todo-postgres-test:/var/lib/postgresql/data
+
   todo-api:
     build: .
     container_name: todo-api
@@ -23,5 +35,16 @@ services:
     depends_on:
       - postgres
 
+  todo-api-test:
+    build: .
+    container_name: todo-api-test
+    env_file:
+      - .env
+      - .env.test
+    depends_on:
+      - postgres-test
+    command: sh -c "npm run db:drop:test && npm run db:create:test && npm run db:migrate:test && npm test"
+
 volumes:
   todo-postgres:
+  todo-postgres-test:

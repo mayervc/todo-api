@@ -165,6 +165,50 @@ docker stop todo-postgres
 docker rm -f todo-postgres
 ```
 
+## 🧪 Testing
+
+El proyecto incluye un sistema completo de testing que se ejecuta con Docker Compose para garantizar entornos de prueba consistentes.
+
+### Ejecutar Tests
+
+```bash
+# Ejecutar todos los tests con Docker Compose
+npm run test:compose
+
+# Ejecutar tests localmente
+npm test
+
+# Ejecutar tests en modo watch
+npm run test:watch
+```
+
+### Estructura de Tests
+
+- **`src/__tests__/`**: Directorio principal de tests
+- **`src/__tests__/setup.ts`**: Configuración global de tests
+- **`src/__tests__/health-check.test.ts`**: Tests de endpoints de API
+- **`src/__tests__/user.test.ts`**: Tests del modelo User
+
+### Configuración de Tests
+
+- **Base de datos de test**: PostgreSQL aislado (`postgres-test`)
+- **Variables de entorno**: `.env.test` (se crea automáticamente)
+- **Cobertura**: Reportes HTML y LCOV generados automáticamente
+- **Timeout**: 30 segundos para operaciones de base de datos
+
+### Comandos de Test Disponibles
+
+```bash
+npm run test:compose          # Tests con Docker Compose
+npm run test:docker           # Tests dentro del contenedor
+npm run test:docker:watch     # Tests en modo watch con Docker
+npm test                      # Tests locales
+npm run test:watch            # Tests en modo watch local
+npm run test:setup            # Configurar entorno de test
+```
+
+Para más detalles sobre testing, consulta [docs/TESTING.md](docs/TESTING.md).
+
 ## 📝 Notas
 
 - El puerto 5433 se usa para evitar conflictos con otras instancias de PostgreSQL
