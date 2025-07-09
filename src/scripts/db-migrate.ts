@@ -1,19 +1,22 @@
-import { Sequelize } from 'sequelize'
-import dotenv from 'dotenv'
-import { sequelize } from '../config/database'
+import { exec } from 'child_process'
+import { promisify } from 'util'
 
-dotenv.config()
+const execAsync = promisify(exec)
 
 async function migrate() {
   try {
-    // Ejecutar migraciones usando Sequelize programáticamente
-    await sequelize.sync({ alter: true })
-    console.log('✅ Migrations executed successfully!')
+    console.log('🔄 Running migrations...')
+    const { stdout, stderr } = await execAsync('npx sequelize-cli db:migrate')
+
+    if (stderr) {
+      console.error('⚠️  Migration warnings:', stderr)
+    }
+
+    console.log(stdout)
+    console.log('✅ Migrations completed successfully!')
   } catch (error: any) {
-    console.error('❌ Error running migrations:', error.message)
+    console.error('❌ Migration failed:', error.message)
     process.exit(1)
-  } finally {
-    await sequelize.close()
   }
 }
 

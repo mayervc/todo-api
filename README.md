@@ -137,7 +137,7 @@ docker compose run --rm todo-api npm run db:drop
 docker compose run --rm todo-api npm run db:create
 
 # Ejecutar migraciones
-docker compose run --rm todo-api npm run migrate
+docker compose run --rm todo-api npm run db:migrate
 
 # Revertir la última migración
 docker compose run --rm todo-api npm run rollback
