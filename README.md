@@ -37,21 +37,16 @@ Una API RESTful para gestión de tareas (todos) construida con Node.js, TypeScri
 
    ```env
    PORT=3000
-   DB_USERNAME=postgres
-   DB_PASSWORD=postgres
+   DB_USERNAME=todo_user
+   DB_PASSWORD=todo_password
    DB_DATABASE=todo_db
    DB_HOST=localhost
    DB_PORT=5433
    ```
 
-4. **Levanta la base de datos PostgreSQL con Docker**
+4. **Levanta los servicios con Docker Compose**
    ```bash
-   docker run --name todo-postgres \
-     -e POSTGRES_USER=postgres \
-     -e POSTGRES_PASSWORD=postgres \
-     -e POSTGRES_DB=todo_db \
-     -p 5433:5432 \
-     -d postgres
+   docker compose up -d
    ```
 
 ## 🚀 Uso
@@ -125,9 +120,37 @@ todo-api/
 - `npm run migrate` - Ejecuta todas las migraciones pendientes usando Sequelize CLI
 - `npm run rollback` - Revierte la última migración usando Sequelize CLI
 
-## 🐳 Manejo de la base de datos con Docker Compose
+## 🐳 Docker Compose
 
-Puedes crear, eliminar y migrar la base de datos directamente desde Docker Compose usando los scripts:
+El proyecto usa Docker Compose para gestionar tanto el entorno de desarrollo como el de testing.
+
+### Servicios Disponibles
+
+- **`postgres`**: Base de datos PostgreSQL para desarrollo (puerto 5433)
+- **`postgres-test`**: Base de datos PostgreSQL para testing (puerto 5434, perfil `test`)
+- **`todo-api`**: Servicio principal de la aplicación
+- **`todo-api-test`**: Servicio dedicado para testing (perfil `test`)
+
+### Comandos de Docker Compose
+
+```bash
+# Levantar servicios de desarrollo
+docker compose up -d
+
+# Levantar todos los servicios (incluyendo testing)
+docker compose --profile test up -d
+
+# Ver logs
+docker compose logs -f
+
+# Detener servicios
+docker compose down
+
+# Eliminar volúmenes (cuidado: borra datos)
+docker compose down -v
+```
+
+### Manejo de la base de datos con Docker Compose
 
 ```bash
 # Eliminar la base de datos
@@ -143,51 +166,70 @@ docker compose run --rm todo-api npm run db:migrate
 docker compose run --rm todo-api npm run db:rollback
 ```
 
-Esto ejecutará los scripts usando Sequelize CLI y los scripts personalizados de creación/eliminación de base de datos dentro del contenedor, usando las variables de entorno configuradas.
-
-## 🐳 Docker
-
-La base de datos PostgreSQL se ejecuta en un contenedor Docker para facilitar el desarrollo.
-
-### Comandos útiles de Docker:
-
-```bash
-# Ver contenedores activos
-docker ps
-
-# Ver logs del contenedor
-docker logs todo-postgres
-
-# Detener el contenedor
-docker stop todo-postgres
-
-# Eliminar el contenedor
-docker rm -f todo-postgres
-```
-
 ## 🧪 Testing
 
-El proyecto incluye un sistema completo de testing que se ejecuta con Docker Compose para garantizar entornos de prueba consistentes.
+El proyecto incluye un sistema completo de testing que se puede ejecutar tanto localmente como en Docker Compose para garantizar entornos de prueba consistentes.
+
+### Tabla de Comandos de Testing
+
+| Contexto            | Comando                                                                                                          | Descripción                                                      |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Local               | `npm test`                                                                                                       | Ejecuta los tests localmente                                     |
+| Local (watch)       | `npm run test:watch`                                                                                             | Ejecuta los tests en modo watch local                            |
+| Docker Test Service | `docker compose --profile test run --rm todo-api-test`                                                           | Ejecuta tests usando el servicio dedicado de test                |
+| Docker Compose      | `docker compose run --rm todo-api npm run test`                                                                  | Ejecuta los tests dentro del contenedor Docker                   |
+| Flujo Pro (Docker)  | `./scripts/docker-test.sh`                                                                                       | Orquesta: crea DB, migra, testea y borra la DB de test en Docker |
+| Manual Pro (Docker) | `docker compose run --rm todo-api sh -c 'npm install && NODE_ENV=test npx ts-node scripts/test-orchestrator.ts'` | Ejecuta el orquestador de tests manualmente en Docker            |
 
 ### Ejecutar Tests
 
 ```bash
-# Ejecutar todos los tests con Docker Compose
-npm run test:compose
+# Ejecutar tests con el servicio dedicado de test (recomendado)
+docker compose --profile test run --rm todo-api-test
+
+# Ejecutar todos los tests con Docker Compose (rápido, solo tests)
+docker compose run --rm todo-api npm run test
+
+# Ejecutar el flujo profesional de testing (crea, migra y borra la DB de test)
+./scripts/docker-test.sh
 
 # Ejecutar tests localmente
 npm test
 
-# Ejecutar tests en modo watch
+# Ejecutar tests en modo watch local
 npm run test:watch
+```
+
+### Servicios de Docker Compose
+
+El proyecto incluye dos servicios principales:
+
+- **`todo-api`**: Servicio principal para desarrollo y producción
+- **`todo-api-test`**: Servicio dedicado para testing (usa perfil `test`)
+
+#### Perfiles de Docker Compose
+
+- **Sin perfil**: Solo se ejecutan los servicios principales (`todo-api`, `postgres`)
+- **Perfil `test`**: Incluye el servicio `todo-api-test` y `postgres-test` optimizado para testing
+
+```bash
+# Ver servicios disponibles
+docker compose config --services
+
+# Ver servicios con perfil test
+docker compose --profile test config --services
 ```
 
 ### Estructura de Tests
 
 - **`src/__tests__/`**: Directorio principal de tests
-- **`src/__tests__/setup.ts`**: Configuración global de tests
-- **`src/__tests__/health-check.test.ts`**: Tests de endpoints de API
-- **`src/__tests__/user.test.ts`**: Tests del modelo User
+- **`src/__tests__/basic.test.ts`**: Ejemplo de test básico
+
+### Notas sobre Testing
+
+- El flujo profesional (`./scripts/docker-test.sh`) garantiza un entorno limpio: crea la base de datos de test, ejecuta migraciones, corre los tests y borra la base de datos al finalizar.
+- El comando `docker compose run --rm todo-api npm run test` ejecuta solo los tests, asumiendo que la base de datos de test ya está lista.
+- Para desarrollo rápido, puedes usar los comandos locales (`npm test`, `npm run test:watch`).
 
 ### Configuración de Tests
 
@@ -206,23 +248,3 @@ npm test                      # Tests locales
 npm run test:watch            # Tests en modo watch local
 npm run test:setup            # Configurar entorno de test
 ```
-
-Para más detalles sobre testing, consulta [docs/TESTING.md](docs/TESTING.md).
-
-## 📝 Notas
-
-- El puerto 5433 se usa para evitar conflictos con otras instancias de PostgreSQL
-- Asegúrate de que el puerto 5433 esté disponible antes de levantar el contenedor
-- Las variables de entorno se cargan automáticamente desde el archivo `.env`
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia ISC.

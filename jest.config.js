@@ -11,8 +11,11 @@ module.exports = {
     ]
   },
   testTimeout: 30000,
-  testMatch: ['<rootDir>/src/__tests__/**/*.test.ts'],
-  testPathIgnorePatterns: ['<rootDir>/node_modules/'],
+  testMatch: [
+    '**/__tests__/**/*.test.[jt]s?(x)',
+    '**/?(*.)+(spec|test).[jt]s?(x)'
+  ],
+  testPathIgnorePatterns: ['/node_modules/', '/dist/', '/src/scripts/test.ts'],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.d.ts',
