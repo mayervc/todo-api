@@ -13,9 +13,6 @@
     "db:rollback": "ts-node src/scripts/db-rollback.ts",
     "db:create": "ts-node src/scripts/db-create.ts",
     "db:drop": "ts-node src/scripts/db-drop.ts",
-    "db:create:test": "NODE_ENV=test ts-node src/scripts/db-create.ts",
-    "db:migrate:test": "NODE_ENV=test ts-node src/scripts/db-migrate.ts",
-    "db:drop:test": "NODE_ENV=test ts-node src/scripts/db-drop.ts",
     "lint": "eslint . --ext .ts,.js",
     "format": "prettier --write .",
     "pretest": "rm -rf dist"
