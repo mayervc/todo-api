@@ -33,26 +33,13 @@ Una API RESTful para gestión de tareas (todos) construida con Node.js, TypeScri
    ```
 
 3. **Configura las variables de entorno**
-   Crea un archivo `.env` en la raíz del proyecto:
+   Copia el archivo `.env.example` a `.env.local` para tu entorno local:
 
-   ```env
-   PORT=3000
-   DB_USERNAME=postgres
-   DB_PASSWORD=postgres
-   DB_DATABASE=todo_db
-   DB_HOST=localhost
-   DB_PORT=5433
-   ```
-
-4. **Levanta la base de datos PostgreSQL con Docker**
    ```bash
-   docker run --name todo-postgres \
-     -e POSTGRES_USER=postgres \
-     -e POSTGRES_PASSWORD=postgres \
-     -e POSTGRES_DB=todo_db \
-     -p 5433:5432 \
-     -d postgres
+   cp .env.example .env.local
    ```
+
+   Edita los valores si es necesario.
 
 ## 🚀 Uso
 
@@ -108,7 +95,8 @@ todo-api/
 ├── seeders/         # Datos de prueba
 ├── src/             # Código fuente
 │   └── index.ts     # Punto de entrada de la aplicación
-├── .env             # Variables de entorno
+├── .env.example     # Variables de entorno de ejemplo
+├── .env.local       # Variables de entorno local
 ├── .eslintrc.json   # Configuración de ESLint
 ├── package.json     # Dependencias y scripts
 └── tsconfig.json    # Configuración de TypeScript
@@ -122,8 +110,8 @@ todo-api/
 - `npm run sequelize` - Ejecuta comandos de Sequelize CLI
 - `npm run db:create` - Crea la base de datos usando un script TypeScript personalizado
 - `npm run db:drop` - Elimina la base de datos usando un script TypeScript personalizado
-- `npm run migrate` - Ejecuta todas las migraciones pendientes usando Sequelize CLI
-- `npm run rollback` - Revierte la última migración usando Sequelize CLI
+- `npm run db:migrate` - Ejecuta todas las migraciones pendientes usando Sequelize CLI
+- `npm run db:rollback` - Revierte la última migración usando Sequelize CLI
 
 ## 🐳 Manejo de la base de datos con Docker Compose
 
@@ -144,6 +132,31 @@ docker compose run --rm todo-api npm run db:rollback
 ```
 
 Esto ejecutará los scripts usando Sequelize CLI y los scripts personalizados de creación/eliminación de base de datos dentro del contenedor, usando las variables de entorno configuradas.
+
+## 🧪 Testing
+
+El flujo de testing ahora utiliza un archivo dedicado de Docker Compose para test: `docker-compose.test.yml`.
+
+### Ejecutar tests en entorno Docker (recomendado)
+
+```bash
+# Levanta los servicios de testing y ejecuta los tests
+docker compose -f docker-compose.test.yml up --abort-on-container-exit
+```
+
+Esto levantará los servicios necesarios para testing (`postgres-test` y `todo-api-test`), ejecutará los tests y apagará los contenedores al finalizar.
+
+### Ejecutar tests localmente
+
+```bash
+npm test
+```
+
+### Ejecutar tests en modo watch local
+
+```bash
+npm run test:watch
+```
 
 ## 🐳 Docker
 
@@ -169,7 +182,7 @@ docker rm -f todo-postgres
 
 - El puerto 5433 se usa para evitar conflictos con otras instancias de PostgreSQL
 - Asegúrate de que el puerto 5433 esté disponible antes de levantar el contenedor
-- Las variables de entorno se cargan automáticamente desde el archivo `.env`
+- Las variables de entorno se cargan automáticamente desde el archivo `.env.local`
 
 ## 🤝 Contribución
 

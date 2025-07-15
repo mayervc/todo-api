@@ -1,16 +1,14 @@
 import request from 'supertest'
 import app from '../index'
-import { sequelize } from '../config/database'
 
 describe('GET /api/health-check', () => {
-  it('should return api and database status', async () => {
-    const response = await request(app).get('/api/health-check')
-    expect(response.status).toBe(200)
-    expect(response.body).toHaveProperty('api')
-    expect(response.body).toHaveProperty('database')
+  it('should return API and database status', async () => {
+    const res = await request(app).get('/api/health-check')
+    expect(res.status).toBe(200)
+    expect(res.body.api).toBe('up')
+    expect(['up', 'down']).toContain(res.body.database)
+    if (res.body.database === 'down') {
+      expect(res.body.error).toBeDefined()
+    }
   })
-})
-
-afterAll(async () => {
-  await sequelize.close()
 })
