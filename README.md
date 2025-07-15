@@ -141,7 +141,7 @@ El flujo de testing ahora utiliza un archivo dedicado de Docker Compose para tes
 
 ```bash
 # Levanta los servicios de testing y ejecuta los tests
-docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+docker compose -f docker-compose.test.yml up --abort-on-container-exit
 ```
 
 Esto levantará los servicios necesarios para testing (`postgres-test` y `todo-api-test`), ejecutará los tests y apagará los contenedores al finalizar.
