@@ -111,7 +111,7 @@ todo-api/
 - `npm run db:create` - Crea la base de datos usando un script TypeScript personalizado
 - `npm run db:drop` - Elimina la base de datos usando un script TypeScript personalizado
 - `npm run db:migrate` - Ejecuta todas las migraciones pendientes usando Sequelize CLI
-- `npm run rollback` - Revierte la última migración usando Sequelize CLI
+- `npm run db:rollback` - Revierte la última migración usando Sequelize CLI
 
 ## 🐳 Manejo de la base de datos con Docker Compose
 
