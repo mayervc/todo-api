@@ -158,6 +158,22 @@ npm test
 npm run test:watch
 ```
 
+## 🚀 Desarrollo con Docker Compose y Hot Reload
+
+Para desarrollo local con recarga automática (hot reload) al modificar el código fuente, simplemente utiliza el archivo principal `docker-compose.yml`:
+
+```bash
+docker compose up --build
+```
+
+Esto levantará los servicios de base de datos y API, montando el código fuente local dentro del contenedor y usando `ts-node-dev` para reiniciar el servidor automáticamente ante cambios.
+
+Haz cambios en tu código y verás los resultados reflejados sin reiniciar manualmente el contenedor.
+
+> **Nota:** Esta configuración está pensada para desarrollo. Para producción, recuerda quitar el montaje de volúmenes y usar el comando de build/start convencional.
+
+---
+
 ## 🐳 Docker
 
 La base de datos PostgreSQL se ejecuta en un contenedor Docker para facilitar el desarrollo.

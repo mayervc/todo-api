@@ -15,13 +15,13 @@ WORKDIR $INSTALL_PATH
 COPY package*.json tsconfig.json ./
 
 # Instala las dependencias de forma limpia
-RUN npm ci
+RUN npm ci --include=dev
 
 # Copia el resto del código fuente
 COPY . .
 
-# Compila el proyecto TypeScript
-RUN npm run build
+# Solo compila en producción (cuando se use npm start)
+# RUN npm run build
 
 # Cambiar propiedad de la app al usuario no-root
 RUN chown -R appuser:appuser $INSTALL_PATH
