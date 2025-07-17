@@ -14,7 +14,7 @@ services:
   todo-api:
     build:
       context: .
-      target: development
+      target: production
     container_name: todo-api
     restart: unless-stopped
     env_file:
@@ -24,11 +24,9 @@ services:
       - '3000:3000'
     depends_on:
       - postgres
-    volumes:
-      - .:/app
-      - /app/node_modules
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
+    # Sin volumes - no necesita hot reload en producción
 
 volumes:
   todo-postgres:
