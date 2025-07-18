@@ -158,6 +158,32 @@ npm test
 npm run test:watch
 ```
 
+## 🚀 Entornos de desarrollo y producción con Docker Compose
+
+### Desarrollo (hot reload)
+
+Para desarrollo local con recarga automática (hot reload) al modificar el código fuente, utiliza el archivo principal `docker-compose.yml`:
+
+```bash
+docker compose up --build
+```
+
+Esto levantará los servicios de base de datos y API, montando el código fuente local dentro del contenedor y usando `ts-node-dev` para reiniciar el servidor automáticamente ante cambios. El entorno se define con `NODE_ENV=development`.
+
+### Producción
+
+Para levantar el entorno de producción, utiliza el archivo `docker-compose.prod.yml`:
+
+```bash
+docker compose -f docker-compose.prod.yml up --build
+```
+
+Esto usará el stage de producción del Dockerfile (multi-stage), instalará solo dependencias de producción, compilará el código y ejecutará la app optimizada. El entorno se define con `NODE_ENV=production` y no monta el código fuente como volumen.
+
+> **Nota:** El entorno (`NODE_ENV`) se define automáticamente en cada archivo de Compose y es leído por la app para seleccionar la configuración adecuada de base de datos y comportamiento.
+
+---
+
 ## 🐳 Docker
 
 La base de datos PostgreSQL se ejecuta en un contenedor Docker para facilitar el desarrollo.

@@ -1,36 +1,62 @@
-# Usa una imagen oficial de Node.js como base
-FROM node:22-alpine
+# Multi-stage Dockerfile
+FROM node:22-alpine AS base
 
-# Crear usuario no-root primero
+# Crear usuario no-root
 RUN adduser -D -u 1001 appuser
 
-# Default directory.
+# Default directory
 ENV INSTALL_PATH=/app
 RUN mkdir -p $INSTALL_PATH
-
-# Create app directory.
 WORKDIR $INSTALL_PATH
 
-# Copia los archivos de dependencias y tsconfig primero para aprovechar el cache de Docker
+# Copia archivos de dependencias
 COPY package*.json tsconfig.json ./
 
-# Instala las dependencias de forma limpia
-RUN npm ci
+# ================================
+# DEVELOPMENT STAGE
+# ================================
+FROM base AS development
 
-# Copia el resto del código fuente
+# Instala todas las dependencias (incluyendo dev)
+RUN npm ci --include=dev
+
+# Copia el resto del código
 COPY . .
 
-# Compila el proyecto TypeScript
-RUN npm run build
-
-# Cambiar propiedad de la app al usuario no-root
+# Cambiar propiedad al usuario no-root
 RUN chown -R appuser:appuser $INSTALL_PATH
 
 # Cambiar a usuario no-root
 USER appuser
 
-# Expone el puerto de la API
+# Expone el puerto
 EXPOSE 3000
 
-# Comando para iniciar la app
-CMD ["npm", "start"] 
+# Comando para desarrollo con hot reload
+CMD ["npm", "run", "dev"]
+
+# ================================
+# PRODUCTION STAGE
+# ================================
+FROM base AS production
+
+# Instala solo dependencias de producción
+RUN npm ci --only=production
+
+# Copia el código
+COPY . .
+
+# Compila la aplicación
+RUN npm run build
+
+# Cambiar propiedad al usuario no-root
+RUN chown -R appuser:appuser $INSTALL_PATH
+
+# Cambiar a usuario no-root
+USER appuser
+
+# Expone el puerto
+EXPOSE 3000
+
+# Comando para producción
+CMD ["npm", "start"]
